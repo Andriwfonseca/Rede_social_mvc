@@ -1,0 +1,34 @@
+-Users
+--id
+--email
+--password
+--name
+--birthdate (data nascimento)
+--city
+--work (onde trabalha)
+--avatar (foto)
+--cover (capa)
+--token (quando usuario fazer login, salva um token no bd e salva na session do usuario)
+
+-UserRelations
+--id
+--user_from (usuario que esta seguindo)
+--user_to (usuario que esta sendo seguido)
+
+-Posts
+--id
+--type (text, photo)
+--created_at (criado em (data))
+--body
+
+-PostComments
+--id
+--id_post
+--id_user
+--created_at
+--body
+
+-PostLikes
+--id
+--id_post
+--id_user
