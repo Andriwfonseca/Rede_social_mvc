@@ -2,7 +2,7 @@
 namespace src\handlers;
 
 use \src\models\User;
-
+use \src\models\UserRelation;
 
 class UserHandler{
 
@@ -60,7 +60,7 @@ class UserHandler{
     }
 
     //pega informacoes do usuario
-    public static function getUser($id){
+    public static function getUser($id, $full = false){
         $data = User::select()->where('id', $id)->one();
 
         if($data){
@@ -72,6 +72,42 @@ class UserHandler{
             $user->work = $data['work'];
             $user->avatar = $data['avatar'];
             $user->cover = $data['cover'];
+
+            if($full){
+                $user->followers = [];
+                $user->following = [];
+                $user->photos = [];
+
+                //seguidores
+                $followers = UserRelation::select()->where('user_to', $id)->get(); //pega todos os seguidores desse $id
+
+                foreach($followers as $follower){
+                    $userData = User::select()->where('id', $follower['user_from'])-one(); //pega as informações de cada seguidor
+                    
+                    $newUser = new User();
+                    $newUser->id = $userData['id'];
+                    $newUser->name = $userData['name'];
+                    $newUser->avatar = $userData['avatar'];
+
+                    $user->followers[] = $newUser;
+                }
+
+                //seguindo
+                $following = UserRelation::select()->where('user_from', $id)->get(); //pega todos que esse $id segue
+
+                foreach($following as $follower){
+                    $userData = User::select()->where('id', $follower['user_to'])-one(); //pega as informações de cada um que eu sigo
+                    
+                    $newUser = new User();
+                    $newUser->id = $userData['id'];
+                    $newUser->name = $userData['name'];
+                    $newUser->avatar = $userData['avatar'];
+
+                    $user->following[] = $newUser;
+                }
+
+                //fotos
+            }
 
             return $user;
         }
