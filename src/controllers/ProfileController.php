@@ -19,8 +19,10 @@ class ProfileController extends Controller {
     }
 
     public function index($atts = []) {//atts = atributos
+        $page = intval(filter_input(INPUT_GET, 'page'));//converte o numero da pagina para int, pois se nao tiver nada, será 0.
         //salva meu id
         $id = $this->loggedUser->id;
+        
         
         //se tiver algum id como parametro, ele substitui o id
         if(!empty($atts['id'])){
@@ -33,10 +35,17 @@ class ProfileController extends Controller {
         if(!$user){
             $this->redirect("/");
         }
+        //calcular idade
+        $dateFrom = new \DateTime($user->birthdate);
+        $dateTo = new \DateTime('today'); 
+        $user->ageYears = $dateFrom->diff($dateTo)->y;
+
+        $feed = PostHandler::getUserFeed($id, $page, $this->loggedUser->id);
 
         $this->render('profile',[
             'loggedUser'=> $this->loggedUser,
-            'user'=> $user
+            'user'=> $user,
+            'feed'=> $feed
         ]);
     }
 

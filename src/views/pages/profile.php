@@ -1,7 +1,6 @@
 <?= $render('header', ['loggedUser'=>$loggedUser]); ?>
 <section class="container main">
     <?= $render('sidebar', ['activeMenu'=>'profile']);?>
-
     <section class="feed">
 
             <div class="row">
@@ -44,7 +43,7 @@
                             
                             <div class="user-info-mini">
                                 <img src="<?=$base;?>/assets/images/calendar.png" />
-                                01/01/1930 (90 anos)
+                                <?=date('d/m/Y', strtotime($user->birthdate));?> (<?=$user->ageYears;?> anos)
                             </div>
 
                             <?php if(!empty($user->city)): ?>
@@ -109,101 +108,40 @@
                         </div>
                         <div class="box-body row m-20">
                             
-                            <div class="user-photo-item">
-                                <a href="#modal-1" rel="modal:open">
-                                    <img src="<?=$base;?>/media/uploads/1.jpg" />
-                                </a>
-                                <div id="modal-1" style="display:none">
-                                    <img src="<?=$base;?>/media/uploads/1.jpg" />
-                                </div>
-                            </div>
-
-                            <div class="user-photo-item">
-                                <a href="#modal-2" rel="modal:open">
-                                    <img src="<?=$base;?>/media/uploads/1.jpg" />
-                                </a>
-                                <div id="modal-2" style="display:none">
-                                    <img src="<?=$base;?>/media/uploads/1.jpg" />
-                                </div>
-                            </div>
-
-                            <div class="user-photo-item">
-                                <a href="#modal-3" rel="modal:open">
-                                    <img src="<?=$base;?>/media/uploads/1.jpg" />
-                                </a>
-                                <div id="modal-3" style="display:none">
-                                    <img src="<?=$base;?>/media/uploads/1.jpg" />
-                                </div>
-                            </div>
-
-                            <div class="user-photo-item">
-                                <a href="#modal-4" rel="modal:open">
-                                    <img src="<?=$base;?>/media/uploads/1.jpg" />
-                                </a>
-                                <div id="modal-4" style="display:none">
-                                    <img src="<?=$base;?>/media/uploads/1.jpg" />
-                                </div>
-                            </div>
+                            <?php for($x=0;$x<4;$x++): ?>
+                                <?php if(isset($user->photos[$x])): ?>
+                                    <div class="user-photo-item">
+                                        <a href="#modal-<?=$user->photos[$x]->id;?>" rel="modal:open">
+                                            <img src="<?=$base;?>/media/uploads/<?=$user->photos[$x]->body;?>" />
+                                        </a>
+                                        <div id="modal-<?=$user->photos[$x]->id;?>" style="display:none">
+                                            <img src="<?=$base;?>/media/uploads/<?=$user->photos[$x]->body;?>" />
+                                        </div>
+                                    </div>
+                                    
+                                <?php endif; ?>
+                            <?php endfor; ?>
                             
                         </div>
                     </div>
+                    <!-- mostra editor de novo feed -->
+                    <?php if($user->id == $loggedUser->id): ?>
+                        <?= $render('feed-editor', ['user'=>$loggedUser]); ?>
+                    <?php endif; ?>
 
-                    <div class="box feed-item">
-                        <div class="box-body">
-                            <div class="feed-item-head row mt-20 m-width-20">
-                                <div class="feed-item-head-photo">
-                                    <a href=""><img src="<?=$base;?>/media/avatars/avatar.jpg" /></a>
-                                </div>
-                                <div class="feed-item-head-info">
-                                    <a href=""><span class="fidi-name">Bonieky Lacerda</span></a>
-                                    <span class="fidi-action">fez um post</span>
-                                    <br/>
-                                    <span class="fidi-date">07/03/2020</span>
-                                </div>
-                                <div class="feed-item-head-btn">
-                                    <img src="<?=$base;?>/assets/images/more.png" />
-                                </div>
-                            </div>
-                            <div class="feed-item-body mt-10 m-width-20">
-                                Pessoal, tudo bem! Busco parceiros para empreender comigo em meu software.<br/><br/>
-                                Acabei de aprová-lo na Appstore. É um sistema de atendimento via WhatsApp multi-atendentes para auxiliar empresas.<br/><br/>
-                                Este sistema permite que vários funcionários/colaboradores da empresa atendam um mesmo número de WhatsApp, mesmo que estejam trabalhando remotamente, sendo que cada um acessa com um login e senha particular....
-                            </div>
-                            <div class="feed-item-buttons row mt-20 m-width-20">
-                                <div class="like-btn on">56</div>
-                                <div class="msg-btn">3</div>
-                            </div>
-                            <div class="feed-item-comments">
-                                
-                                <div class="fic-item row m-height-10 m-width-20">
-                                    <div class="fic-item-photo">
-                                        <a href=""><img src="<?=$base;?>/media/avatars/avatar.jpg" /></a>
-                                    </div>
-                                    <div class="fic-item-info">
-                                        <a href="">Bonieky Lacerda</a>
-                                        Comentando no meu próprio post
-                                    </div>
-                                </div>
+                    <?php foreach($feed['posts'] as $feedItem): ?>
 
-                                <div class="fic-item row m-height-10 m-width-20">
-                                    <div class="fic-item-photo">
-                                        <a href=""><img src="<?=$base;?>/media/avatars/avatar.jpg" /></a>
-                                    </div>
-                                    <div class="fic-item-info">
-                                        <a href="">Bonieky Lacerda</a>
-                                        Muito legal, parabéns!
-                                    </div>
-                                </div>
+                        <?= $render('feed-item', [
+                            'data' => $feedItem,
+                            'loggedUser' => $loggedUser
+                        ]); ?>
 
-                                <div class="fic-answer row m-height-10 m-width-20">
-                                    <div class="fic-item-photo">
-                                        <a href=""><img src="<?=$base;?>/media/avatars/avatar.jpg" /></a>
-                                    </div>
-                                    <input type="text" class="fic-item-field" placeholder="Escreva um comentário" />
-                                </div>
-
-                            </div>
-                        </div>
+                    <?php endforeach; ?>
+                    <!--  numero de paginas -->
+                    <div class="feed-pagination">
+                        <?php for($q=0;$q<$feed['pageCount'];$q++): ?>
+                            <a class="<?=($q==$feed['currentPage']?'active':'')?>" href="<?=$base;?>/perfil/<?=$user->id?>?page=<?= $q;?>"><?=$q+1;?></a>
+                        <?php endfor; ?>
                     </div>
 
 
