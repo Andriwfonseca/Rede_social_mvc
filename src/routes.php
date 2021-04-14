@@ -14,6 +14,8 @@ $router->post('/cadastro', 'LoginController@signupAction');
 $router->get('/perfil/{id}', "ProfileController@index");
 $router->get('/perfil', "ProfileController@index");
 
+$router->get('/sair', 'LoginController@logout');
+
 
 //rotas da pagina header
 //$router->get('/pesquisa');

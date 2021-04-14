@@ -94,4 +94,10 @@ class LoginController extends Controller {
 
     }
 
+    //remove a sessao e volta para pagina de login
+    public function logout(){
+        $_SESSION['token'] = '';
+        $this->redirect('/login');
+    }
+
 }
