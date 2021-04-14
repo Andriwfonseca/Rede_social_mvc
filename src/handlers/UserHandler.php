@@ -132,4 +132,16 @@ class UserHandler{
         return $token;
     }
 
+    //confere se estou seguindo o usuario
+    public static function isFollowing($from, $to){
+        $data = UserRelation::select()
+        ->where('user_from', $from)
+        ->where('user_to', $to)
+        ->one();
+
+        if($data){
+            return true;
+        }
+        return false;
+    }
 }
