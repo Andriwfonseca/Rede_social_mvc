@@ -19,11 +19,7 @@
                                 <!-- Botao seguir--->
                                 <?php if($user->id != $loggedUser->id): ?>
                                 <div class="profile-info-item m-width-20">
-                                    <?php if($isFollowing): ?>
-                                        <a href="#" class="button">Deixar de Seguir</a>
-                                    <?php else: ?>    
-                                        <a href="#" class="button">Seguir</a>
-                                    <?php endif; ?>
+                                    <a href="<?=$base;?>/perfil/<?=$user->id;?>/follow" class="button"><?=(!$isFollowing)?"Seguir":"Deixar de Seguir";?></a>
                                 </div>
                                 <?php endif; ?>
                                 <div class="profile-info-item m-width-20">
@@ -89,12 +85,12 @@
                             <?php for($x=0;$x<9;$x++): ?>
                                 <?php if(isset($user->following[$x])): ?><!--confere se tem esse quantidade de usuarios antes de mostrar-->
                                     <div class="friend-icon">
-                                        <a href="<?=$base;?>/perfil/<?=$follower[$x]->id;?>">
+                                        <a href="<?=$base;?>/perfil/<?=$user->following[$x]->id;?>">
                                             <div class="friend-icon-avatar">
-                                                <img src="<?=$base;?>/media/avatars/<?=$follower[$x]->avatar;?>" />
+                                                <img src="<?=$base;?>/media/avatars/<?=$user->following[$x]->avatar;?>" />
                                             </div>
                                             <div class="friend-icon-name">
-                                                <?=$follower[$x]->name;?>
+                                                <?=$user->following[$x]->name;?>
                                             </div>
                                         </a>
                                     </div>

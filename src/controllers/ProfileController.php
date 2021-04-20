@@ -28,10 +28,10 @@ class ProfileController extends Controller {
         if(!empty($atts['id'])){
             $id = $atts['id'];
         }
-
+        
         //pega informacoes do usuario
         $user = UserHandler::getUser($id, true);
-
+        
         if(!$user){
             $this->redirect("/");
         }
@@ -57,4 +57,26 @@ class ProfileController extends Controller {
         ]);
     }
 
+    //Seguir
+    public function follow($atts){
+
+        $to = intval($atts['id']);
+
+        //verifica se id existe
+        $exists = UserHandler::idExists($to);
+
+        if($exists){
+            //Se ja seguir usuario, para de seguir. Se nao segue, começa a seguir
+            if(UserHandler::isFollowing($this->loggedUser->id, $to)){
+                //deixar de seguir
+                UserHandler::unfollow($this->loggedUser->id, $to);
+
+            }else{
+                //seguir
+                UserHandler::follow($this->loggedUser->id, $to);
+            }
+        }
+
+        $this->redirect('/perfil/'.$to);
+    }
 }

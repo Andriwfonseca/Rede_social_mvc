@@ -11,10 +11,13 @@ $router->post('/login', 'LoginController@signinAction');
 $router->get('/cadastro', 'LoginController@signup');
 $router->post('/cadastro', 'LoginController@signupAction');
 
+$router->get('/perfil/{id}/follow', 'ProfileController@follow');
 $router->get('/perfil/{id}', "ProfileController@index");
 $router->get('/perfil', "ProfileController@index");
 
 $router->get('/sair', 'LoginController@logout');
+
+
 
 
 //rotas da pagina header

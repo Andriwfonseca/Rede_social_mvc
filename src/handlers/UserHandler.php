@@ -78,12 +78,13 @@ class UserHandler{
                 $user->followers = [];
                 $user->following = [];
                 $user->photos = [];
-
+                
                 //seguidores
                 $followers = UserRelation::select()->where('user_to', $id)->get(); //pega todos os seguidores desse $id
-
+                
                 foreach($followers as $follower){
-                    $userData = User::select()->where('id', $follower['user_from'])-one(); //pega as informações de cada seguidor
+                
+                    $userData = User::select()->where('id', $follower['user_from'])->one(); //pega as informações de cada seguidor
                     
                     $newUser = new User();
                     $newUser->id = $userData['id'];
@@ -97,7 +98,8 @@ class UserHandler{
                 $following = UserRelation::select()->where('user_from', $id)->get(); //pega todos que esse $id segue
 
                 foreach($following as $follower){
-                    $userData = User::select()->where('id', $follower['user_to'])-one(); //pega as informações de cada um que eu sigo
+                    
+                    $userData = User::select()->where('id', $follower['user_to'])->one(); //pega as informações de cada um que eu sigo
                     
                     $newUser = new User();
                     $newUser->id = $userData['id'];
@@ -143,5 +145,20 @@ class UserHandler{
             return true;
         }
         return false;
+    }
+
+    //Seguir usuario
+    public static function follow($from, $to){
+        UserRelation::insert([
+            'user_from' => $from,
+            'user_to' => $to
+            ])->execute();
+    }
+    //Deixar de seguir usuario
+    public static function unfollow($from, $to){
+        UserRelation::delete()
+            ->where('user_from', $from)
+            ->where('user_to', $to)
+            ->execute();
     }
 }
