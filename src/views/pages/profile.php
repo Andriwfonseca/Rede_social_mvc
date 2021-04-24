@@ -1,6 +1,6 @@
 <?= $render('header', ['loggedUser'=>$loggedUser]); ?>
 <section class="container main">
-    <?= $render('sidebar', ['activeMenu'=>'profile']);?>
+    <?= $render('sidebar', ['activeMenu'=>'profile', 'qtdFriends'=>$qtdFriends ]);?>
     <section class="feed">
 
             <div class="row">
@@ -76,7 +76,7 @@
                                 <span>(<?=count($user->following);?>)</span>
                             </div>
                             <div class="box-header-buttons">
-                                <a href="">ver todos</a>
+                                <a href="<?=$base;?>/perfil/<?=$user->id;?>/amigos">ver todos</a>
                             </div>
                         </div>
                         <div class="box-body friend-list">

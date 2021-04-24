@@ -24,6 +24,7 @@ class HomeController extends Controller {
 
         $page = intval(filter_input(INPUT_GET, 'page'));//converte o numero da pagina para int, pois se nao tiver nada, será 0.
 
+        $qtdFriends = UserHandler::qtdFollowing($this->loggedUser->id);
 
         $feed = PostHandler::getHomeFeed(
             $this->loggedUser->id,
@@ -33,7 +34,8 @@ class HomeController extends Controller {
 
         $this->render('home', [
             'loggedUser' => $this->loggedUser,
-            'feed' => $feed
+            'feed' => $feed,
+            'qtdFriends'=> $qtdFriends
             ]);
     }
 

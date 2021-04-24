@@ -48,12 +48,15 @@ class ProfileController extends Controller {
             $isFollowing = UserHandler::isFollowing($this->loggedUser->id, $user->id);
         }
 
+        //quantidade de amigos
+        $qtdFriends = UserHandler::qtdFollowing($this->loggedUser->id);
 
         $this->render('profile',[
             'loggedUser'=> $this->loggedUser,
             'user'=> $user,
             'feed'=> $feed,
-            'isFollowing'=> $isFollowing
+            'isFollowing'=> $isFollowing,
+            'qtdFriends'=> $qtdFriends
         ]);
     }
 
@@ -78,5 +81,44 @@ class ProfileController extends Controller {
         }
 
         $this->redirect('/perfil/'.$to);
+    }
+
+    public function friends($atts = []){
+        
+        //salva meu id
+        $id = $this->loggedUser->id;
+        
+        //se tiver algum id como parametro, ele substitui o id
+        if(!empty($atts['id'])){
+            $id = $atts['id'];
+        }
+
+        //pega informacoes do usuario
+        $user = UserHandler::getUser($id, true);
+        
+        if(!$user){
+            $this->redirect("/");
+        }
+
+        //calcular idade
+        $dateFrom = new \DateTime($user->birthdate);
+        $dateTo = new \DateTime('today'); 
+        $user->ageYears = $dateFrom->diff($dateTo)->y;
+
+        //verificar se eu sigo o usuario
+        $isFollowing = false;
+        if($user->id != $this->loggedUser->id){
+            $isFollowing = UserHandler::isFollowing($this->loggedUser->id, $user->id);
+        }
+
+        //quantidade de amigos
+        $qtdFriends = UserHandler::qtdFollowing($this->loggedUser->id);
+
+        $this->render('profile_friends',[
+            'loggedUser'=> $this->loggedUser,
+            'user'=> $user,
+            'isFollowing'=> $isFollowing,
+            'qtdFriends'=> $qtdFriends
+        ]);
     }
 }

@@ -161,4 +161,15 @@ class UserHandler{
             ->where('user_to', $to)
             ->execute();
     }
+
+    //retorna quantidade de pessoas que eu sigo
+    public static function qtdFollowing($id){
+        $data = UserRelation::select()->where('user_from', $id)->get(); //pega todos que esse $id segue
+
+        if($data){
+            return count($data);
+        }else{
+            return 0;
+        }
+    }
 }
